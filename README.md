@@ -1,6 +1,6 @@
 # Consul CLB for Go
 
-randomly selects a SRV record answer, then resolves it's A record to an ip, and returns an Address Object:
+randomly selects a `SRV` record answer, then resolves its `A` record to an ip, and returns an `Address` structure:
 
 	type Address struct {
 		Address string
