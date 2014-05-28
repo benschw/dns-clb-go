@@ -6,19 +6,19 @@ import (
 )
 
 func NewRandomClb(address string, port string) clb.LoadBalancer {
-	c := clb.NewDNSClient(address, port)
-	lb := RandomClb{client: c}
+	cfg := clb.DNSServerConfig{Address: address, Port: port}
+	lb := RandomClb{serverConfig: cfg}
 	return lb
 }
 
 type RandomClb struct {
-	client *clb.DNSClient
+	serverConfig clb.DNSServerConfig
 }
 
 func (lb RandomClb) GetAddress(name string) (clb.Address, error) {
 	add := clb.Address{}
 
-	srvs, err := lb.client.LookupSRV(name)
+	srvs, err := clb.LookupSRV(lb.serverConfig, name)
 	if err != nil {
 		return add, err
 	}
@@ -26,10 +26,10 @@ func (lb RandomClb) GetAddress(name string) (clb.Address, error) {
 
 	srv := srvs[rand.Intn(len(srvs))]
 
-	aAdd, err := lb.client.LookupA(srv.Address)
+	ip, err := clb.LookupA(lb.serverConfig, srv.Target)
 	if err != nil {
 		return add, err
 	}
 
-	return clb.Address{Address: aAdd.Address, Port: srv.Port}, nil
+	return clb.Address{Address: ip, Port: srv.Port}, nil
 }

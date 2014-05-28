@@ -19,14 +19,15 @@ func ExampleLookup() {
 		panic(err)
 	}
 
-	fmt.Printf("%s", address.Port)
+	fmt.Print(address.Port)
 	// Output: 5269
 
 }
 
+//strconv.FormatInt(int64(srv.Port), 10)
 func Test_LookupGoogleXmppService_ReturnsAddress(t *testing.T) {
 	// given
-	port := "5269"
+	port := uint16(5269)
 	srvName := "_xmpp-server._tcp.google.com"
 	c := randomclb.NewRandomClb("8.8.8.8", "53")
 
