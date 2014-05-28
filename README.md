@@ -1,4 +1,4 @@
-<!-- [![Build Status](https://drone.io/github.com/BancVue/a10mgt/status.png)](https://drone.io/github.com/BancVue/a10mgt/latest) -->
+[![Build Status](https://drone.io/github.com/benschw/consul-clb-go/status.png)](https://drone.io/github.com/benschw/consul-clb-go/latest)
 
 [![Build Status](https://travis-ci.org/benschw/consul-clb-go.png?branch=master)](https://travis-ci.org/benschw/consul-clb-go)
 
