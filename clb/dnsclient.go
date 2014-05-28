@@ -7,19 +7,21 @@ import (
 	"strings"
 )
 
-const resolvConf = "/etc/resolv.conf"
+type LoadBalancer interface {
+	GetAddress(name string) (Address, error)
+}
 
-func NewClb(address string, port string) *Clb {
-	c := new(Clb)
-	c.Server = DNSServer{Address: address, Port: port}
+func NewDNSClient(address string, port string) *DNSClient {
+	c := new(DNSClient)
+	c.Server = DNSServerConfig{Address: address, Port: port}
 	return c
 }
 
-type Clb struct {
-	Server DNSServer
+type DNSClient struct {
+	Server DNSServerConfig
 }
 
-type DNSServer struct {
+type DNSServerConfig struct {
 	Address string
 	Port    string
 }
@@ -29,7 +31,7 @@ type Address struct {
 	Port    string
 }
 
-func (c *Clb) LookupAddress(name string) (Address, error) {
+func (c *DNSClient) LookupAddress(name string) (Address, error) {
 	add := Address{}
 
 	srvs, err := c.LookupSRV(name)
@@ -47,7 +49,7 @@ func (c *Clb) LookupAddress(name string) (Address, error) {
 
 	return Address{Address: aAdd.Address, Port: srv.Port}, nil
 }
-func (c *Clb) LookupSRV(name string) ([]Address, error) {
+func (c *DNSClient) LookupSRV(name string) ([]Address, error) {
 	var srvs = make([]Address, 0, 10)
 	answer, err := c.Lookup(name, "SRV")
 	if err != nil {
@@ -66,7 +68,7 @@ func (c *Clb) LookupSRV(name string) ([]Address, error) {
 	}
 	return srvs, nil
 }
-func (c *Clb) LookupA(name string) (Address, error) {
+func (c *DNSClient) LookupA(name string) (Address, error) {
 	add := Address{}
 	answer, err := c.Lookup(name, "A")
 	if err != nil {
@@ -78,7 +80,7 @@ func (c *Clb) LookupA(name string) (Address, error) {
 	return add, nil
 }
 
-func (c *Clb) Lookup(name string, recordType string) (*dns.Msg, error) {
+func (c *DNSClient) Lookup(name string, recordType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
@@ -98,7 +100,7 @@ func (c *Clb) Lookup(name string, recordType string) (*dns.Msg, error) {
 
 }
 
-func (c *Clb) lookup(msg *dns.Msg, client *dns.Client, server string, edns bool) (*dns.Msg, error) {
+func (c *DNSClient) lookup(msg *dns.Msg, client *dns.Client, server string, edns bool) (*dns.Msg, error) {
 	if edns {
 		opt := &dns.OPT{
 			Hdr: dns.RR_Header{
