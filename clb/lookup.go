@@ -22,11 +22,27 @@ type Address struct {
 func LookupAddress(server DNSServer, name string) (Address, error) {
 	add := Address{}
 
-	answer, err := Lookup(server, "SRV", name)
+	srvs, err := LookupSRV(server, name)
 	if err != nil {
 		return add, err
 	}
+	//	log.Printf("%+v", srvs)
+
+	srv := srvs[rand.Intn(len(srvs))]
+
+	aAdd, err := LookupA(server, srv.Address)
+	if err != nil {
+		return add, err
+	}
+
+	return Address{Address: aAdd.Address, Port: srv.Port}, nil
+}
+func LookupSRV(server DNSServer, name string) ([]Address, error) {
 	var srvs = make([]Address, 0, 10)
+	answer, err := Lookup(server, name, "SRV")
+	if err != nil {
+		return srvs, err
+	}
 	for _, v := range answer.Answer {
 		//log.Printf("%+v", v.Header())
 		parts := strings.Split(v.String(), "\t")
@@ -38,29 +54,21 @@ func LookupAddress(server DNSServer, name string) (Address, error) {
 		srvs[n] = Address{Address: infoParts[3], Port: infoParts[2]}
 
 	}
-	//	log.Printf("%+v", srvs)
-
-	srv := srvs[rand.Intn(len(srvs))]
-
-	ip, err := LookupA(server, srv.Address)
+	return srvs, nil
+}
+func LookupA(server DNSServer, name string) (Address, error) {
+	add := Address{}
+	answer, err := Lookup(server, name, "A")
 	if err != nil {
 		return add, err
 	}
-
-	return Address{Address: ip, Port: srv.Port}, nil
-}
-func LookupA(server DNSServer, name string) (string, error) {
-	answer, err := Lookup(server, "A", name)
-	if err != nil {
-		return "", err
-	}
 	parts := strings.Split(answer.Answer[0].String(), "\t")
-	ip := parts[len(parts)-1]
-	//	log.Printf("%+v", answer.Answer)
-	return ip, nil
+	add.Address = parts[len(parts)-1]
+
+	return add, nil
 }
 
-func Lookup(server DNSServer, recordType string, name string) (*dns.Msg, error) {
+func Lookup(server DNSServer, name string, recordType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
