@@ -1,4 +1,4 @@
-# Consul CLB for Go
+# Consul Client Load Balancer for Go
 
 randomly selects a `SRV` record answer, then resolves its `A` record to an ip, and returns an `Address` structure:
 
