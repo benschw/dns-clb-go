@@ -9,15 +9,20 @@ import (
 
 const resolvConf = "/etc/resolv.conf"
 
+type DNSServer struct {
+	Address string
+	Port    string
+}
+
 type Address struct {
 	Address string
 	Port    string
 }
 
-func LookupAddress(name string) (Address, error) {
+func LookupAddress(server DNSServer, name string) (Address, error) {
 	add := Address{}
 
-	answer, err := Lookup("SRV", name)
+	answer, err := Lookup(server, "SRV", name)
 	if err != nil {
 		return add, err
 	}
@@ -37,15 +42,15 @@ func LookupAddress(name string) (Address, error) {
 
 	srv := srvs[rand.Intn(len(srvs))]
 
-	ip, err := LookupA(srv.Address)
+	ip, err := LookupA(server, srv.Address)
 	if err != nil {
 		return add, err
 	}
 
 	return Address{Address: ip, Port: srv.Port}, nil
 }
-func LookupA(name string) (string, error) {
-	answer, err := Lookup("A", name)
+func LookupA(server DNSServer, name string) (string, error) {
+	answer, err := Lookup(server, "A", name)
 	if err != nil {
 		return "", err
 	}
@@ -55,7 +60,7 @@ func LookupA(name string) (string, error) {
 	return ip, nil
 }
 
-func Lookup(recordType string, name string) (*dns.Msg, error) {
+func Lookup(server DNSServer, recordType string, name string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
@@ -66,8 +71,8 @@ func Lookup(recordType string, name string) (*dns.Msg, error) {
 	msg := &dns.Msg{}
 	msg.SetQuestion(name, qType)
 
-	server := fmt.Sprintf("%s:%s", "127.0.0.1", "8600")
-	response, err := lookup(msg, client, server, false)
+	serverStr := fmt.Sprintf("%s:%s", server.Address, server.Port)
+	response, err := lookup(msg, client, serverStr, false)
 	if err != nil {
 		return nil, fmt.Errorf("Couldn't resolve %s: No server responded", name)
 	}

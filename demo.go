@@ -26,8 +26,10 @@ func status(w http.ResponseWriter, req *http.Request) {
 // [{"Node":"agent-one","Address":"172.20.20.11","ServiceID":"web","ServiceName":"web","ServiceTags":["rails"],"ServicePort":80}]
 
 func getAddress(svcName string) (string, error) {
+	server := clb.DNSServer{Address: "127.0.0.1", Port: "8600"}
+
 	srvRecord := svcName + ".service.consul"
-	address, err := clb.LookupAddress(srvRecord)
+	address, err := clb.LookupAddress(server, srvRecord)
 	if err != nil {
 		return "", err
 	}
