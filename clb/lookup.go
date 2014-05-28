@@ -9,6 +9,16 @@ import (
 
 const resolvConf = "/etc/resolv.conf"
 
+func NewClb(address string, port string) *Clb {
+	c := new(Clb)
+	c.Server = DNSServer{Address: address, Port: port}
+	return c
+}
+
+type Clb struct {
+	Server DNSServer
+}
+
 type DNSServer struct {
 	Address string
 	Port    string
@@ -19,10 +29,10 @@ type Address struct {
 	Port    string
 }
 
-func LookupAddress(server DNSServer, name string) (Address, error) {
+func (c *Clb) LookupAddress(name string) (Address, error) {
 	add := Address{}
 
-	srvs, err := LookupSRV(server, name)
+	srvs, err := c.LookupSRV(name)
 	if err != nil {
 		return add, err
 	}
@@ -30,16 +40,16 @@ func LookupAddress(server DNSServer, name string) (Address, error) {
 
 	srv := srvs[rand.Intn(len(srvs))]
 
-	aAdd, err := LookupA(server, srv.Address)
+	aAdd, err := c.LookupA(srv.Address)
 	if err != nil {
 		return add, err
 	}
 
 	return Address{Address: aAdd.Address, Port: srv.Port}, nil
 }
-func LookupSRV(server DNSServer, name string) ([]Address, error) {
+func (c *Clb) LookupSRV(name string) ([]Address, error) {
 	var srvs = make([]Address, 0, 10)
-	answer, err := Lookup(server, name, "SRV")
+	answer, err := c.Lookup(name, "SRV")
 	if err != nil {
 		return srvs, err
 	}
@@ -56,9 +66,9 @@ func LookupSRV(server DNSServer, name string) ([]Address, error) {
 	}
 	return srvs, nil
 }
-func LookupA(server DNSServer, name string) (Address, error) {
+func (c *Clb) LookupA(name string) (Address, error) {
 	add := Address{}
-	answer, err := Lookup(server, name, "A")
+	answer, err := c.Lookup(name, "A")
 	if err != nil {
 		return add, err
 	}
@@ -68,7 +78,7 @@ func LookupA(server DNSServer, name string) (Address, error) {
 	return add, nil
 }
 
-func Lookup(server DNSServer, name string, recordType string) (*dns.Msg, error) {
+func (c *Clb) Lookup(name string, recordType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
@@ -79,8 +89,8 @@ func Lookup(server DNSServer, name string, recordType string) (*dns.Msg, error) 
 	msg := &dns.Msg{}
 	msg.SetQuestion(name, qType)
 
-	serverStr := fmt.Sprintf("%s:%s", server.Address, server.Port)
-	response, err := lookup(msg, client, serverStr, false)
+	serverStr := fmt.Sprintf("%s:%s", c.Server.Address, c.Server.Port)
+	response, err := c.lookup(msg, client, serverStr, false)
 	if err != nil {
 		return nil, fmt.Errorf("Couldn't resolve %s: No server responded", name)
 	}
@@ -88,7 +98,7 @@ func Lookup(server DNSServer, name string, recordType string) (*dns.Msg, error) 
 
 }
 
-func lookup(msg *dns.Msg, client *dns.Client, server string, edns bool) (*dns.Msg, error) {
+func (c *Clb) lookup(msg *dns.Msg, client *dns.Client, server string, edns bool) (*dns.Msg, error) {
 	if edns {
 		opt := &dns.OPT{
 			Hdr: dns.RR_Header{
