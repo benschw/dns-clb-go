@@ -13,13 +13,15 @@ func ExampleLookup() {
 	server := DNSServer{Address: "8.8.8.8", Port: "53"}
 
 	address, err := LookupAddress(server, "_xmpp-server._tcp.google.com")
+	//{Address:173.194.73.125:  Port:5269}
 
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("%+v", address)
-	// Output: {Address:74.125.142.put:  Port:5269}
+	fmt.Printf("%s", address.Port)
+	// Output: 5269
+
 }
 
 func Test_LookupGoogleXmppService_ReturnsAddress(t *testing.T) {
@@ -38,5 +40,4 @@ func Test_LookupGoogleXmppService_ReturnsAddress(t *testing.T) {
 	if port != address.Port {
 		t.Errorf("port '%s' not expected", address.Port)
 	}
-	fmt.Printf("%+v", address)
 }
