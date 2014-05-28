@@ -16,7 +16,7 @@ func ExampleLookup() {
 	//{Address:173.194.73.125:  Port:5269}
 
 	if err != nil {
-		panic(err)
+		log.Print(err)
 	}
 
 	fmt.Print(address.Port)

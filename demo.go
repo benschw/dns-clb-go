@@ -9,8 +9,6 @@ import (
 	"launchpad.net/goyaml"
 	"log"
 	"net/http"
-	"strconv"
-
 	"os"
 )
 
@@ -34,9 +32,8 @@ func getAddress(svcName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	port := strconv.FormatInt(int64(address.Port), 10)
 
-	return address.Address + ":" + port, nil
+	return address.String(), nil
 }
 
 type Config struct {
