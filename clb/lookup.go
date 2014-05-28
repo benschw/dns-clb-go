@@ -16,12 +16,8 @@ type Address struct {
 
 func LookupAddress(name string) (Address, error) {
 	add := Address{}
-	t, ok := dns.StringToType["SRV"]
-	if !ok {
-		return add, fmt.Errorf("Invalid type 'SRV'")
-	}
 
-	answer, err := Lookup(t, name)
+	answer, err := Lookup("SRV", name)
 	if err != nil {
 		return add, err
 	}
@@ -49,12 +45,7 @@ func LookupAddress(name string) (Address, error) {
 	return Address{Address: ip, Port: srv.Port}, nil
 }
 func LookupA(name string) (string, error) {
-	t, ok := dns.StringToType["A"]
-	if !ok {
-		return "", fmt.Errorf("Invalid type 'A'")
-	}
-
-	answer, err := Lookup(t, name)
+	answer, err := Lookup("A", name)
 	if err != nil {
 		return "", err
 	}
@@ -64,7 +55,11 @@ func LookupA(name string) (string, error) {
 	return ip, nil
 }
 
-func Lookup(qType uint16, name string) (*dns.Msg, error) {
+func Lookup(recordType string, name string) (*dns.Msg, error) {
+	qType, ok := dns.StringToType[recordType]
+	if !ok {
+		return nil, fmt.Errorf("Invalid type '%s'", recordType)
+	}
 	name = dns.Fqdn(name)
 
 	client := &dns.Client{}
