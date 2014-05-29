@@ -12,7 +12,7 @@ var _ = log.Print // For debugging; delete when done.
 
 func ExampleRoundRobinLookup() {
 	srvName := "foo.service.fliglio.com"
-	c := roundrobinclb.NewRoundRobinClb("127.0.0.1", "53")
+	c := roundrobinclb.NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
 	if err != nil {
 		fmt.Print(err)
@@ -31,11 +31,10 @@ func ExampleRoundRobinLookup() {
 
 }
 
-//strconv.FormatInt(int64(srv.Port), 10)
 func TestRoundRobinLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fliglio.com"
-	c := roundrobinclb.NewRoundRobinClb("127.0.0.1", "53")
+	c := roundrobinclb.NewRoundRobinClb("8.8.8.8", "53")
 
 	// when
 	address, err := c.GetAddress(srvName)
