@@ -6,35 +6,27 @@ import (
 )
 
 func lookupType(serverStr string, name string, recordType string) (*dns.Msg, error) {
+	// try a connection with a udp connection first
+	return lookup(serverStr, name, recordType, "")
+}
+
+func lookup(serverStr string, name string, recordType string, connType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
 	}
 	name = dns.Fqdn(name)
 
-	client := &dns.Client{}
+	client := &dns.Client{Net: connType}
+
 	msg := &dns.Msg{}
 	msg.SetQuestion(name, qType)
 
-	return lookup(msg, client, serverStr, false)
-}
-
-func lookup(msg *dns.Msg, client *dns.Client, server string, edns bool) (*dns.Msg, error) {
-	if edns {
-		opt := &dns.OPT{
-			Hdr: dns.RR_Header{
-				Name:   ".",
-				Rrtype: dns.TypeOPT,
-			},
-		}
-		opt.SetUDPSize(dns.DefaultMsgSize)
-		msg.Extra = append(msg.Extra, opt)
-	}
-
-	response, _, err := client.Exchange(msg, server)
+	response, _, err := client.Exchange(msg, serverStr)
 
 	if err != nil {
-		return nil, err
+		// retry lookup with a tcp connection
+		return lookup(serverStr, name, recordType, "tcp")
 	}
 
 	if msg.Id != response.Id {

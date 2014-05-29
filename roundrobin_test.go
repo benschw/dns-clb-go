@@ -18,6 +18,12 @@ func ExampleRoundRobinLookup() {
 		fmt.Print(err)
 	}
 
+	fmt.Printf("%s\n", address)
+	address2, err := c.GetAddress(srvName)
+	fmt.Printf("%s\n", address2)
+	address3, err := c.GetAddress(srvName)
+	fmt.Printf("%s\n", address3)
+
 	if address.Port == 8001 {
 		fmt.Printf("%s", address)
 	} else {
