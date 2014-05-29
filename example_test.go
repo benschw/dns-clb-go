@@ -5,7 +5,7 @@ import (
 	"github.com/benschw/consul-clb-go/clb"
 )
 
-func ExampleRoundRobinLookup() {
+func Example_RoundRobinLookup() {
 	srvName := "foo.service.fliglio.com"
 	c := clb.NewClb("8.8.8.8", "53", clb.RoundRobin)
 	address, err := c.GetAddress(srvName)
