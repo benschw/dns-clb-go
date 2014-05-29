@@ -10,7 +10,7 @@ import (
 var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
 
-func ExampleRoundRobin() {
+func Example_RoundRobin() {
 	srvName := "foo.service.fliglio.com"
 	c := NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
@@ -30,7 +30,7 @@ func ExampleRoundRobin() {
 	// Output: 0.1.2.3:8001
 
 }
-func ExampleRoundRobinFacade() {
+func Example_RoundRobinFacade() {
 	srvName := "foo.service.fliglio.com"
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 	address, err := c.GetAddress(srvName)
