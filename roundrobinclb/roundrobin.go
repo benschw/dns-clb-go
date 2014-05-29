@@ -2,11 +2,14 @@ package roundrobinclb
 
 import (
 	"fmt"
-	"github.com/benschw/consul-clb-go/clb"
+	"github.com/benschw/consul-clb-go/dns"
 )
 
-func NewRoundRobinClb(address string, port string) clb.LoadBalancer {
-	lb := RoundRobinClb{serverStr: fmt.Sprintf("%s:%s", address, port), i: 0}
+func NewRoundRobinClb(address string, port string) *RoundRobinClb {
+	lb := new(RoundRobinClb)
+	lb.serverStr = fmt.Sprintf("%s:%s", address, port)
+	lb.i = 0
+
 	return lb
 }
 
@@ -15,24 +18,27 @@ type RoundRobinClb struct {
 	i         int
 }
 
-func (lb RoundRobinClb) GetAddress(name string) (clb.Address, error) {
-	add := clb.Address{}
+func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
+	add := dns.Address{}
 
-	srvs, err := clb.LookupSRV(lb.serverStr, name)
+	srvs, err := dns.LookupSRV(lb.serverStr, name)
 	if err != nil {
 		return add, err
+	}
+	if len(srvs) == 0 {
+		return add, fmt.Errorf("No SRV Records founds")
 	}
 	//	log.Printf("%+v", srvs)
 	if len(srvs)-1 > lb.i {
 		lb.i = 0
 	}
 	srv := srvs[lb.i]
-	lb.i++
+	lb.i = lb.i + 1
 
-	ip, err := clb.LookupA(lb.serverStr, srv.Target)
+	ip, err := dns.LookupA(lb.serverStr, srv.Target)
 	if err != nil {
 		return add, err
 	}
 
-	return clb.Address{Address: ip, Port: srv.Port}, nil
+	return dns.Address{Address: ip, Port: srv.Port}, nil
 }
