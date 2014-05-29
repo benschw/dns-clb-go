@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-func Example() {
+// Example with direct usage
+func ExampleRoundRobin() {
 	srvName := "foo.service.fliglio.com"
 	c := NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
@@ -24,7 +25,8 @@ func Example() {
 	// Output: 0.1.2.3:8001
 }
 
-func ExampleRoundRobinFacade() {
+//Example with factory
+func ExampleRoundRobinFactory() {
 	srvName := "foo.service.fliglio.com"
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 	address, err := c.GetAddress(srvName)
