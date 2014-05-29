@@ -30,3 +30,28 @@ func TestLoadBalancerInterface(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestRoundRobinFacade(t *testing.T) {
+	//given
+	c := clb.NewClb("8.8.8.8", "53", clb.ROUND_ROBIN)
+
+	// when
+	err := doStuff(c)
+
+	// then
+	if err != nil {
+		t.Error(err)
+	}
+}
+func TestRandomFacade(t *testing.T) {
+	//given
+	c := clb.NewClb("8.8.8.8", "53", clb.RANDOM)
+
+	// when
+	err := doStuff(c)
+
+	// then
+	if err != nil {
+		t.Error(err)
+	}
+}

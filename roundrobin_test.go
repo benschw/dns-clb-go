@@ -10,27 +10,6 @@ import (
 var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
 
-func ExampleRoundRobinLookup() {
-	srvName := "foo.service.fliglio.com"
-	c := roundrobinclb.NewRoundRobinClb("8.8.8.8", "53")
-	address, err := c.GetAddress(srvName)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	if address.Port == 8001 {
-		fmt.Printf("%s", address)
-	} else {
-		address2, err := c.GetAddress(srvName)
-		if err != nil {
-			fmt.Print(err)
-		}
-		fmt.Printf("%s", address2)
-	}
-	// Output: 0.1.2.3:8001
-
-}
-
 func TestRoundRobinLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fliglio.com"
