@@ -1,5 +1,0 @@
-package clb
-
-import (
-	"fmt"
-)
