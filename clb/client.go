@@ -9,8 +9,8 @@ import (
 type LoadBalancerType int
 
 const (
-	RANDOM      LoadBalancerType = iota
-	ROUND_ROBIN LoadBalancerType = iota
+	Random     LoadBalancerType = iota
+	RoundRobin LoadBalancerType = iota
 )
 
 type LoadBalancer interface {
@@ -19,9 +19,9 @@ type LoadBalancer interface {
 
 func NewClb(address string, port string, lbType LoadBalancerType) LoadBalancer {
 	switch lbType {
-	case ROUND_ROBIN:
+	case RoundRobin:
 		return NewRoundRobinClb(address, port)
-	case RANDOM:
+	case Random:
 		return NewRandomClb(address, port)
 	}
 	return nil

@@ -26,7 +26,7 @@ func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 		return add, err
 	}
 	if len(srvs) == 0 {
-		return add, fmt.Errorf("No SRV Records founds")
+		return add, fmt.Errorf("no SRV records found")
 	}
 	//	log.Printf("%+v", srvs)
 	if len(srvs)-1 > lb.i {

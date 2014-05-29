@@ -33,7 +33,7 @@ func TestLoadBalancerInterface(t *testing.T) {
 
 func TestRoundRobinFacade(t *testing.T) {
 	//given
-	c := clb.NewClb("8.8.8.8", "53", clb.ROUND_ROBIN)
+	c := clb.NewClb("8.8.8.8", "53", clb.RoundRobin)
 
 	// when
 	err := doStuff(c)
@@ -45,7 +45,7 @@ func TestRoundRobinFacade(t *testing.T) {
 }
 func TestRandomFacade(t *testing.T) {
 	//given
-	c := clb.NewClb("8.8.8.8", "53", clb.RANDOM)
+	c := clb.NewClb("8.8.8.8", "53", clb.Random)
 
 	// when
 	err := doStuff(c)

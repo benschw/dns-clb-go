@@ -1,4 +1,4 @@
-package clb
+package main
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 
 func ExampleRoundRobinLookup() {
 	srvName := "foo.service.fliglio.com"
-	c := clb.NewClb("8.8.8.8", "53", clb.ROUND_ROBIN)
+	c := clb.NewClb("8.8.8.8", "53", clb.RoundRobin)
 	address, err := c.GetAddress(srvName)
 	if err != nil {
 		fmt.Print(err)
