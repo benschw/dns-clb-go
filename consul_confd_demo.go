@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/benschw/consul-clb-go/randomclb"
+	"github.com/benschw/consul-clb-go/clb"
 	"io/ioutil"
 	"launchpad.net/goyaml"
 	"log"
@@ -25,7 +25,7 @@ func status(w http.ResponseWriter, req *http.Request) {
 // [{"Node":"agent-one","Address":"172.20.20.11","ServiceID":"web","ServiceName":"web","ServiceTags":["rails"],"ServicePort":80}]
 
 func getAddress(svcName string) (string, error) {
-	c := randomclb.NewRandomClb("127.0.0.1", "8600")
+	c := clb.NewClb("127.0.0.1", "8600", clb.Random)
 
 	srvRecord := svcName + ".service.consul"
 	address, err := c.GetAddress(srvRecord)
