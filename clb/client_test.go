@@ -1,8 +1,7 @@
-package main
+package clb
 
 import (
 	"fmt"
-	"github.com/benschw/consul-clb-go/clb"
 	"github.com/benschw/consul-clb-go/roundrobinclb"
 	"log"
 	"testing"
@@ -10,6 +9,27 @@ import (
 
 var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
+
+func ExampleClient() {
+	srvName := "foo.service.fliglio.com"
+	c := NewClb("8.8.8.8", "53", RoundRobin)
+	address, err := c.GetAddress(srvName)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	if address.Port == 8001 {
+		fmt.Printf("%s", address)
+	} else {
+		address2, err := c.GetAddress(srvName)
+		if err != nil {
+			fmt.Print(err)
+		}
+		fmt.Printf("%s", address2)
+	}
+	// Output: 0.1.2.3:8001
+
+}
 
 func doStuff(c clb.LoadBalancer) error {
 	srvName := "foo.service.fliglio.com"
@@ -33,7 +53,7 @@ func TestLoadBalancerInterface(t *testing.T) {
 
 func TestRoundRobinFacade(t *testing.T) {
 	//given
-	c := clb.NewClb("8.8.8.8", "53", clb.RoundRobin)
+	c := NewClb("8.8.8.8", "53", clb.RoundRobin)
 
 	// when
 	err := doStuff(c)
@@ -45,7 +65,7 @@ func TestRoundRobinFacade(t *testing.T) {
 }
 func TestRandomFacade(t *testing.T) {
 	//given
-	c := clb.NewClb("8.8.8.8", "53", clb.Random)
+	c := NewClb("8.8.8.8", "53", clb.Random)
 
 	// when
 	err := doStuff(c)
