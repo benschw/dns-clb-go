@@ -11,7 +11,7 @@ var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
 
 // Example with direct usage
-func Example() {
+func ExampleNewRoundRobinClb() {
 	srvName := "foo.service.fliglio.com"
 	c := NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
@@ -32,7 +32,7 @@ func Example() {
 }
 
 // Example with factory
-func ExampleRoundRobinFactory() {
+func ExampleNewClb() {
 	srvName := "foo.service.fliglio.com"
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 	address, err := c.GetAddress(srvName)
