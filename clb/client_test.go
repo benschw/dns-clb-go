@@ -10,7 +10,7 @@ import (
 var _ = fmt.Print // For debugging; delete when done.
 var _ = log.Print // For debugging; delete when done.
 
-func Example_RoundRobin() {
+func ExampleRoundRobin() {
 	srvName := "foo.service.fliglio.com"
 	c := NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
@@ -30,7 +30,7 @@ func Example_RoundRobin() {
 	// Output: 0.1.2.3:8001
 
 }
-func Example_RoundRobinFacade() {
+func ExampleRoundRobinFacade() {
 	srvName := "foo.service.fliglio.com"
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 	address, err := c.GetAddress(srvName)
@@ -51,7 +51,7 @@ func Example_RoundRobinFacade() {
 
 }
 
-func doStuff(c clb.LoadBalancer) error {
+func doStuff(c LoadBalancer) error {
 	srvName := "foo.service.fliglio.com"
 	_, err := c.GetAddress(srvName)
 	return err
@@ -73,7 +73,7 @@ func TestLoadBalancerInterface(t *testing.T) {
 
 func TestRoundRobinFacade(t *testing.T) {
 	//given
-	c := NewClb("8.8.8.8", "53", clb.RoundRobin)
+	c := NewClb("8.8.8.8", "53", RoundRobin)
 
 	// when
 	err := doStuff(c)
@@ -85,7 +85,7 @@ func TestRoundRobinFacade(t *testing.T) {
 }
 func TestRandomFacade(t *testing.T) {
 	//given
-	c := NewClb("8.8.8.8", "53", clb.Random)
+	c := NewClb("8.8.8.8", "53", Random)
 
 	// when
 	err := doStuff(c)
