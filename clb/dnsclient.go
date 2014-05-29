@@ -53,7 +53,10 @@ func parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 
 func parseAAnswer(answer *dns.Msg) (string, error) {
 	if a, ok := answer.Answer[0].(*dns.A); ok {
-		return string(a.A), nil
+
+		return a.A.String(), nil
+
+		//		return string(a.A[:n]), nil
 	}
 	return "", fmt.Errorf("Could not parse A record")
 }
