@@ -3,7 +3,15 @@ package roundrobinclb
 import (
 	"fmt"
 	"github.com/benschw/consul-clb-go/dns"
+	"net"
+	"sort"
 )
+
+type ByTarget []net.SRV
+
+func (a ByTarget) Len() int           { return len(a) }
+func (a ByTarget) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByTarget) Less(i, j int) bool { return a[i].Target < a[j].Target }
 
 func NewRoundRobinClb(address string, port string) *RoundRobinClb {
 	lb := new(RoundRobinClb)
@@ -25,6 +33,8 @@ func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 	if err != nil {
 		return add, err
 	}
+	sort.Sort(ByTarget(srvs))
+
 	if len(srvs) == 0 {
 		return add, fmt.Errorf("no SRV records found")
 	}
