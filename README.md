@@ -1,7 +1,5 @@
 [![Build Status](https://drone.io/github.com/benschw/consul-clb-go/status.png)](https://drone.io/github.com/benschw/consul-clb-go/latest)
 
-[![Build Status](https://travis-ci.org/benschw/consul-clb-go.png?branch=master)](https://travis-ci.org/benschw/consul-clb-go)
-
 [![GoDoc](http://godoc.org/github.com/benschw/consul-clb-go?status.png)](http://godoc.org/github.com/benschw/consul-clb-go)
 
 # Consul Client Load Balancer for Go
@@ -10,19 +8,20 @@ randomly selects a `SRV` record answer, then resolves its `A` record to an ip, a
 
 	type Address struct {
 		Address string
-		Port string
+		Port    uint16
 	}
 
 
 example:
 	
-	svcName := "my-svc"
 
-	srvRecord := svcName + ".service.consul"
-	address, err := clb.LookupAddress(srvRecord)
+	srvName := "my-svc.service.consul"
+	c := NewClb("127.0.0.1", "8600", RoundRobin)
+	address, err := c.GetAddress(srvName)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Print(address.Address + ":" + address.Port)
+	fmt.Printf("%s", address.String())
+	// Output: 0.1.2.3:8001
 
