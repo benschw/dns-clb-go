@@ -2,6 +2,7 @@ package randomclb
 
 import (
 	"fmt"
+	"github.com/benschw/consul-clb-go/dns"
 	"log"
 	"testing"
 )
@@ -13,7 +14,8 @@ var _ = log.Print // For debugging; delete when done.
 func TestRandomLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fliglio.com"
-	c := NewRandomClb("8.8.8.8", "53")
+	lib := dns.NewLookupLib("8.8.8.8:53")
+	c := NewRandomClb(lib)
 
 	// when
 	address, err := c.GetAddress(srvName)

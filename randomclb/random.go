@@ -1,26 +1,24 @@
 package randomclb
 
 import (
-	"fmt"
 	"github.com/benschw/consul-clb-go/dns"
 	"math/rand"
 )
 
-func NewRandomClb(address string, port string) *RandomClb {
+func NewRandomClb(lib dns.Lookup) *RandomClb {
 	lb := new(RandomClb)
-	lb.serverStr = fmt.Sprintf("%s:%s", address, port)
-
+	lb.dnsLib = lib
 	return lb
 }
 
 type RandomClb struct {
-	serverStr string
+	dnsLib dns.Lookup
 }
 
 func (lb *RandomClb) GetAddress(name string) (dns.Address, error) {
 	add := dns.Address{}
 
-	srvs, err := dns.LookupSRV(lb.serverStr, name)
+	srvs, err := lb.dnsLib.LookupSRV(name)
 	if err != nil {
 		return add, err
 	}
@@ -28,7 +26,7 @@ func (lb *RandomClb) GetAddress(name string) (dns.Address, error) {
 
 	srv := srvs[rand.Intn(len(srvs))]
 
-	ip, err := dns.LookupA(lb.serverStr, srv.Target)
+	ip, err := lb.dnsLib.LookupA(srv.Target)
 	if err != nil {
 		return add, err
 	}

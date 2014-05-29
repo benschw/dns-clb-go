@@ -13,23 +13,23 @@ func (a ByTarget) Len() int           { return len(a) }
 func (a ByTarget) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByTarget) Less(i, j int) bool { return a[i].Target < a[j].Target }
 
-func NewRoundRobinClb(address string, port string) *RoundRobinClb {
+func NewRoundRobinClb(lib dns.Lookup) *RoundRobinClb {
 	lb := new(RoundRobinClb)
-	lb.serverStr = fmt.Sprintf("%s:%s", address, port)
+	lb.dnsLib = lib
 	lb.i = 0
 
 	return lb
 }
 
 type RoundRobinClb struct {
-	serverStr string
-	i         int
+	dnsLib dns.Lookup
+	i      int
 }
 
 func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 	add := dns.Address{}
 
-	srvs, err := dns.LookupSRV(lb.serverStr, name)
+	srvs, err := lb.dnsLib.LookupSRV(name)
 	if err != nil {
 		return add, err
 	}
@@ -45,7 +45,7 @@ func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 	srv := srvs[lb.i]
 	lb.i = lb.i + 1
 
-	ip, err := dns.LookupA(lb.serverStr, srv.Target)
+	ip, err := lb.dnsLib.LookupA(srv.Target)
 	if err != nil {
 		return add, err
 	}

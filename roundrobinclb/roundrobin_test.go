@@ -2,6 +2,7 @@ package roundrobinclb
 
 import (
 	"fmt"
+	"github.com/benschw/consul-clb-go/dns"
 	"log"
 	"testing"
 )
@@ -12,7 +13,8 @@ var _ = log.Print // For debugging; delete when done.
 func TestRoundRobinLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fliglio.com"
-	c := NewRoundRobinClb("8.8.8.8", "53")
+	lib := dns.NewLookupLib("8.8.8.8:53")
+	c := NewRoundRobinClb(lib)
 
 	// when
 	address, err := c.GetAddress(srvName)

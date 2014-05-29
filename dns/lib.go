@@ -15,24 +15,39 @@ func (a Address) String() string {
 	return fmt.Sprintf("%s:%d", a.Address, a.Port)
 }
 
-func LookupSRV(serverString string, name string) ([]net.SRV, error) {
+type Lookup interface {
+	LookupSRV(name string) ([]net.SRV, error)
+	LookupA(name string) (string, error)
+}
+
+func NewLookupLib(serverString string) *LookupLib {
+	l := new(LookupLib)
+	l.serverString = serverString
+	return l
+}
+
+type LookupLib struct {
+	serverString string
+}
+
+func (l *LookupLib) LookupSRV(name string) ([]net.SRV, error) {
 	var srvs = make([]net.SRV, 0)
-	answer, err := lookupType(serverString, name, "SRV")
+	answer, err := l.lookupType(name, "SRV")
 	if err != nil {
 		return srvs, err
 	}
-	return parseSRVAnswer(answer)
+	return l.parseSRVAnswer(answer)
 }
 
-func LookupA(serverString string, name string) (string, error) {
-	answer, err := lookupType(serverString, name, "A")
+func (l *LookupLib) LookupA(name string) (string, error) {
+	answer, err := l.lookupType(name, "A")
 	if err != nil {
 		return "", err
 	}
-	return parseAAnswer(answer)
+	return l.parseAAnswer(answer)
 }
 
-func parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
+func (l *LookupLib) parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 	var srvs = make([]net.SRV, 0)
 	for _, v := range answer.Answer {
 		if srv, ok := v.(*dns.SRV); ok {
@@ -47,7 +62,7 @@ func parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 	return srvs, nil
 }
 
-func parseAAnswer(answer *dns.Msg) (string, error) {
+func (l *LookupLib) parseAAnswer(answer *dns.Msg) (string, error) {
 	if a, ok := answer.Answer[0].(*dns.A); ok {
 
 		return a.A.String(), nil
@@ -57,12 +72,12 @@ func parseAAnswer(answer *dns.Msg) (string, error) {
 	return "", fmt.Errorf("Could not parse A record")
 }
 
-func lookupType(serverStr string, name string, recordType string) (*dns.Msg, error) {
+func (l *LookupLib) lookupType(name string, recordType string) (*dns.Msg, error) {
 	// try a connection with a udp connection first
-	return lookup(serverStr, name, recordType, "")
+	return l.lookup(name, recordType, "")
 }
 
-func lookup(serverStr string, name string, recordType string, connType string) (*dns.Msg, error) {
+func (l *LookupLib) lookup(name string, recordType string, connType string) (*dns.Msg, error) {
 	qType, ok := dns.StringToType[recordType]
 	if !ok {
 		return nil, fmt.Errorf("Invalid type '%s'", recordType)
@@ -74,11 +89,11 @@ func lookup(serverStr string, name string, recordType string, connType string) (
 	msg := &dns.Msg{}
 	msg.SetQuestion(name, qType)
 
-	response, _, err := client.Exchange(msg, serverStr)
+	response, _, err := client.Exchange(msg, l.serverString)
 
-	if err != nil {
+	if err != nil && connType == "" {
 		// retry lookup with a tcp connection
-		return lookup(serverStr, name, recordType, "tcp")
+		return l.lookup(name, recordType, "tcp")
 	}
 
 	if msg.Id != response.Id {
