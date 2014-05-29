@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func ExampleRoundRobin() {
+func Example() {
 	srvName := "foo.service.fliglio.com"
 	c := NewRoundRobinClb("8.8.8.8", "53")
 	address, err := c.GetAddress(srvName)
