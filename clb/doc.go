@@ -7,5 +7,4 @@ algorithm to include in your application
 
 
 */
-
 package clb
