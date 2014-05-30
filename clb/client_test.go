@@ -66,9 +66,24 @@ func TestRoundRobinFacade(t *testing.T) {
 		t.Error(err)
 	}
 }
+
 func TestRandomFacade(t *testing.T) {
 	//given
 	c := NewClb("8.8.8.8", "53", Random)
+
+	// when
+	srvName := "foo.service.fliglio.com"
+	_, err := c.GetAddress(srvName)
+
+	// then
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestSyncTtlCacheFacade(t *testing.T) {
+	//given
+	c := NewSyncTtlCacheClb("8.8.8.8", "53", Random, 5)
 
 	// when
 	srvName := "foo.service.fliglio.com"
