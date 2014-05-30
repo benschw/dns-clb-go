@@ -1,4 +1,4 @@
-package syncttlcache
+package ttlcache
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func TestLookup(t *testing.T) {
 	// given
 	srvName := "foo.service.fliglio.com"
 	lib := dns.NewLookupLib("8.8.8.8:53")
-	cache := NewSyncTtlCache(lib, 5)
+	cache := NewTtlCache(lib, 5)
 	c := randomclb.NewRandomClb(cache)
 
 	// when

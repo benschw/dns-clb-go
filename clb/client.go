@@ -5,7 +5,7 @@ import (
 	"github.com/benschw/consul-clb-go/dns"
 	"github.com/benschw/consul-clb-go/randomclb"
 	"github.com/benschw/consul-clb-go/roundrobinclb"
-	"github.com/benschw/consul-clb-go/syncttlcache"
+	"github.com/benschw/consul-clb-go/ttlcache"
 )
 
 type LoadBalancerType int
@@ -32,9 +32,9 @@ func NewClb(address string, port string, lbType LoadBalancerType) LoadBalancer {
 	return buildClb(lib, lbType)
 }
 
-func NewSyncTtlCacheClb(address string, port string, lbType LoadBalancerType, ttl int) LoadBalancer {
+func NewTtlCacheClb(address string, port string, lbType LoadBalancerType, ttl int) LoadBalancer {
 	lib := dns.NewLookupLib(fmt.Sprintf("%s:%s", address, port))
-	cache := syncttlcache.NewSyncTtlCache(lib, ttl)
+	cache := ttlcache.NewTtlCache(lib, ttl)
 
 	return buildClb(cache, lbType)
 }

@@ -1,4 +1,4 @@
-package syncttlcache
+package ttlcache
 
 import (
 	"github.com/benschw/consul-clb-go/dns"
@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func NewSyncTtlCache(lib dns.Lookup, ttl int) *SyncTtlCache {
-	c := new(SyncTtlCache)
+func NewTtlCache(lib dns.Lookup, ttl int) *TtlCache {
+	c := new(TtlCache)
 	c.lib = lib
 	c.ttl = ttl
 	c.lastUpdate = 0
@@ -15,7 +15,7 @@ func NewSyncTtlCache(lib dns.Lookup, ttl int) *SyncTtlCache {
 	return c
 }
 
-type SyncTtlCache struct {
+type TtlCache struct {
 	lib        dns.Lookup
 	ttl        int
 	lastUpdate int32
@@ -23,7 +23,7 @@ type SyncTtlCache struct {
 	as         map[string]string
 }
 
-func (l *SyncTtlCache) LookupSRV(name string) ([]net.SRV, error) {
+func (l *TtlCache) LookupSRV(name string) ([]net.SRV, error) {
 	err := l.checkCache()
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (l *SyncTtlCache) LookupSRV(name string) ([]net.SRV, error) {
 	return l.srvs, nil
 }
 
-func (l *SyncTtlCache) LookupA(name string) (string, error) {
+func (l *TtlCache) LookupA(name string) (string, error) {
 	err := l.checkCache()
 	if err != nil {
 		return "", err
@@ -55,7 +55,7 @@ func (l *SyncTtlCache) LookupA(name string) (string, error) {
 	return l.as[name], nil
 }
 
-func (l *SyncTtlCache) checkCache() error {
+func (l *TtlCache) checkCache() error {
 	now := int32(time.Now().Unix())
 	if l.lastUpdate+int32(l.ttl) < now {
 		l.lastUpdate = now

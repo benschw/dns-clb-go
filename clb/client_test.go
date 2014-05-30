@@ -81,9 +81,9 @@ func TestRandomFacade(t *testing.T) {
 	}
 }
 
-func TestSyncTtlCacheFacade(t *testing.T) {
+func TestTtlCacheFacade(t *testing.T) {
 	//given
-	c := NewSyncTtlCacheClb("8.8.8.8", "53", Random, 5)
+	c := NewTtlCacheClb("8.8.8.8", "53", Random, 5)
 
 	// when
 	srvName := "foo.service.fliglio.com"
