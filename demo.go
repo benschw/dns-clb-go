@@ -6,23 +6,10 @@ import (
 	"fmt"
 	"github.com/benschw/dns-clb-go/clb"
 	"io/ioutil"
-	"launchpad.net/goyaml"
 	"log"
 	"net/http"
 	"os"
 )
-
-func status(w http.ResponseWriter, req *http.Request) {
-	health := "OK"
-
-	if _, err := os.Stat("/tmp/fail-healthcheck"); err == nil {
-		//file exists
-		health = "FAIL"
-	}
-	fmt.Fprintf(w, "%+v", health)
-}
-
-// [{"Node":"agent-one","Address":"172.20.20.11","ServiceID":"web","ServiceName":"web","ServiceTags":["rails"],"ServicePort":80}]
 
 func getAddress(svcName string) (string, error) {
 	c := clb.NewClb("127.0.0.1", "8600", clb.Random)
@@ -36,41 +23,15 @@ func getAddress(svcName string) (string, error) {
 	return address.String(), nil
 }
 
-type Config struct {
-	Foo  string
-	Foo2 string
-}
-
-func getFoo() (string, error) {
-	fileData, err := ioutil.ReadFile("/opt/my-config.yaml")
-	if err != nil {
-		return "", err
-	}
-
-	data := Config{}
-
-	err = goyaml.Unmarshal(fileData, &data)
-	if err != nil {
-		return "", err
-	}
-	log.Printf("%+v", data)
-	return data.Foo, nil
-}
-
 func foo(w http.ResponseWriter, req *http.Request) {
 	name, _ := os.Hostname()
-	foo, err := getFoo()
-	if err != nil {
-		log.Print(err)
-	}
 
-	fmt.Fprintf(w, "{\"Name\": \"%s\", \"Foo\": \"%s\"}", name, foo)
+	fmt.Fprintf(w, "{\"Name\": \"%s\"}", name)
 
 }
 
 type FooName struct {
 	Name string
-	Foo  string
 }
 
 func demo(w http.ResponseWriter, req *http.Request) {
@@ -98,7 +59,7 @@ func demo(w http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 
-	fmt.Fprintf(w, "Discovered Address: '%s'\nService Response: Host Name: '%s'\nService Response: Foo: '%s'", addStr, data.Name, data.Foo)
+	fmt.Fprintf(w, "Discovered Address: '%s'\nService Response: Host Name: '%s'", addStr, data.Name)
 
 }
 
@@ -107,7 +68,6 @@ var consulAddr = *flag.String("consul-addr", "localhost:8500", "consul address")
 
 func main() {
 	flag.Parse()
-	http.Handle("/status", http.HandlerFunc(status))
 	http.Handle("/foo", http.HandlerFunc(foo))
 	http.Handle("/demo", http.HandlerFunc(demo))
 
