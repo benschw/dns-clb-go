@@ -1,7 +1,6 @@
-[![Build Status](https://drone.io/github.com/benschw/consul-clb-go/status.png)](https://drone.io/github.com/benschw/consul-clb-go/latest)
-[![GoDoc](http://godoc.org/github.com/benschw/consul-clb-go?status.png)](http://godoc.org/github.com/benschw/consul-clb-go)
+[![GoDoc](http://godoc.org/github.com/benschw/dns-clb-go?status.png)](http://godoc.org/github.com/benschw/dns-clb-go)
 
-# Consul Client Load Balancer for Go
+# DNS Client Load Balancer for Go
 
 Selects a `SRV` record answer according to specified load balancer algorithm, then resolves its `A` record to an ip, and returns an `Address` structure:
 
@@ -9,14 +8,6 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 		Address string
 		Port    uint16
 	}
-
-## Notes for Consul / Confd Cluster Demo
-
-Version 0.1.0 contains the `demo` service used in my blog post outlining how to use Consul for service discovery and configuration management while using Confd and DNS to keep your applications decoupled from the specifics of Consul.
-
-- download `demo` service here: https://github.com/benschw/consul-clb-go/releases/tag/v0.1.0
-- blog post outlining the demo: http://txt.fliglio.com/2014/05/encapsulated-services-with-consul-and-confd/
-
 
 
 ## Example:
@@ -38,3 +29,11 @@ tests are run against some fixture dns entries I set up on fliglio.com (`dig foo
 
 - `make deps` install deps
 - `make test` run all tests
+
+## Notes for Consul / Confd Cluster Demo
+This is a fork from the original project https://github.com/benschw/consul-clb-go which contains the `demo` service used in my blog post outlining how to use Consul for service discovery and configuration management while using Confd and DNS to keep your applications decoupled from the specifics of Consul.
+
+- download `demo` service here: https://github.com/benschw/consul-clb-go/releases/tag/v0.1.0
+- blog post outlining the demo: http://txt.fliglio.com/2014/05/encapsulated-services-with-consul-and-confd/
+
+
