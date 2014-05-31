@@ -1,7 +1,7 @@
 package ttlcache
 
 import (
-	"github.com/benschw/consul-clb-go/dns"
+	"github.com/benschw/dns-clb-go/dns"
 	"net"
 	"time"
 )

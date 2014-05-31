@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/benschw/consul-clb-go/clb"
+	"github.com/benschw/dns-clb-go/clb"
 	"io/ioutil"
 	"launchpad.net/goyaml"
 	"log"

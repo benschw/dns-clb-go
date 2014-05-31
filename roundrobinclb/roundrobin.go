@@ -2,7 +2,7 @@ package roundrobinclb
 
 import (
 	"fmt"
-	"github.com/benschw/consul-clb-go/dns"
+	"github.com/benschw/dns-clb-go/dns"
 	"net"
 	"sort"
 )

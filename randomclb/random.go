@@ -1,7 +1,7 @@
 package randomclb
 
 import (
-	"github.com/benschw/consul-clb-go/dns"
+	"github.com/benschw/dns-clb-go/dns"
 	"math/rand"
 )
 

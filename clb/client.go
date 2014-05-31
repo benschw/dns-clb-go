@@ -2,10 +2,10 @@ package clb
 
 import (
 	"fmt"
-	"github.com/benschw/consul-clb-go/dns"
-	"github.com/benschw/consul-clb-go/randomclb"
-	"github.com/benschw/consul-clb-go/roundrobinclb"
-	"github.com/benschw/consul-clb-go/ttlcache"
+	"github.com/benschw/dns-clb-go/dns"
+	"github.com/benschw/dns-clb-go/randomclb"
+	"github.com/benschw/dns-clb-go/roundrobinclb"
+	"github.com/benschw/dns-clb-go/ttlcache"
 )
 
 type LoadBalancerType int
