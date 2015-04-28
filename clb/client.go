@@ -2,6 +2,7 @@ package clb
 
 import (
 	"fmt"
+
 	"github.com/benschw/dns-clb-go/dns"
 	"github.com/benschw/dns-clb-go/randomclb"
 	"github.com/benschw/dns-clb-go/roundrobinclb"
@@ -24,6 +25,12 @@ const (
 
 type LoadBalancer interface {
 	GetAddress(name string) (dns.Address, error)
+}
+
+func NewDefaultClb(lbType LoadBalancerType) LoadBalancer {
+	lib := dns.NewDefaultLookupLib()
+
+	return buildClb(lib, lbType)
 }
 
 func NewClb(address string, port string, lbType LoadBalancerType) LoadBalancer {

@@ -2,8 +2,9 @@ package dns
 
 import (
 	"fmt"
-	"github.com/miekg/dns"
 	"net"
+
+	"github.com/miekg/dns"
 )
 
 type Address struct {
@@ -20,6 +21,13 @@ type Lookup interface {
 	LookupA(name string) (string, error)
 }
 
+func NewDefaultLookupLib() *LookupLib {
+	config, _ := dns.ClientConfigFromFile("/etc/resolv.conf")
+	serverString := config.Servers[0] + ":" + config.Port
+	l := new(LookupLib)
+	l.serverString = serverString
+	return l
+}
 func NewLookupLib(serverString string) *LookupLib {
 	l := new(LookupLib)
 	l.serverString = serverString
