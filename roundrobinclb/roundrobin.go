@@ -2,9 +2,10 @@ package roundrobinclb
 
 import (
 	"fmt"
-	"github.com/benschw/dns-clb-go/dns"
 	"net"
 	"sort"
+
+	"github.com/benschw/dns-clb-go/dns"
 )
 
 type ByTarget []net.SRV
@@ -38,10 +39,10 @@ func (lb *RoundRobinClb) GetAddress(name string) (dns.Address, error) {
 	if len(srvs) == 0 {
 		return add, fmt.Errorf("no SRV records found")
 	}
-	//	log.Printf("%+v", srvs)
-	if len(srvs)-1 > lb.i {
+	if len(srvs)-1 < lb.i {
 		lb.i = 0
 	}
+	//	log.Printf("%d/%d / %+v", lb.i, len(srvs), srvs)
 	srv := srvs[lb.i]
 	lb.i = lb.i + 1
 
