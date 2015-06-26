@@ -99,9 +99,13 @@ func (l *LookupLib) lookup(name string, recordType string, connType string) (*dn
 
 	response, _, err := client.Exchange(msg, l.serverString)
 
-	if err != nil && connType == "" {
-		// retry lookup with a tcp connection
-		return l.lookup(name, recordType, "tcp")
+	if err != nil {
+		if connType == "" {
+			// retry lookup with a tcp connection
+			return l.lookup(name, recordType, "tcp")
+		} else {
+			return nil, fmt.Errorf("Couldn't resolve name '%s'", name)
+		}
 	}
 
 	if msg.Id != response.Id {
