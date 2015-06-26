@@ -71,6 +71,9 @@ func (l *LookupLib) parseSRVAnswer(answer *dns.Msg) ([]net.SRV, error) {
 }
 
 func (l *LookupLib) parseAAnswer(answer *dns.Msg) (string, error) {
+	if len(answer.Answer) == 0 {
+		return "", fmt.Errorf("Answer Empty")
+	}
 	if a, ok := answer.Answer[0].(*dns.A); ok {
 
 		return a.A.String(), nil
