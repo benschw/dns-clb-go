@@ -6,6 +6,14 @@ type AddressProvider interface {
 	GetAddress() (dns.Address, error)
 }
 
+type StaticAddressProvider struct {
+	Address dns.Address
+}
+
+func (s *StaticAddressProvider) GetAddress() (dns.Address, error) {
+	return s.Address, nil
+}
+
 func NewAddressProvider(address string) *SRVAddressProvider {
 	return &SRVAddressProvider{
 		Lb:      New(),
