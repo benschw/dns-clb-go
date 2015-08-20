@@ -27,6 +27,10 @@ type LoadBalancer interface {
 	GetAddress(name string) (dns.Address, error)
 }
 
+func New() LoadBalancer {
+	return NewDefaultClb(RoundRobin)
+}
+
 func NewDefaultClb(lbType LoadBalancerType) LoadBalancer {
 	lib := dns.NewDefaultLookupLib()
 
