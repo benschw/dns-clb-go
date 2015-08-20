@@ -2,9 +2,10 @@ package clb
 
 import (
 	"fmt"
-	"github.com/benschw/dns-clb-go/dns"
 	"log"
 	"testing"
+
+	"github.com/benschw/dns-clb-go/dns"
 )
 
 var _ = fmt.Print // For debugging; delete when done.
@@ -51,6 +52,29 @@ func ExampleNewClb() {
 		fmt.Printf("%s", address2)
 	}
 	// Output: 0.1.2.3:8001
+}
+
+func TestAddressProvider(t *testing.T) {
+	// given
+	c := NewClb("8.8.8.8", "53", RoundRobin)
+	ap := &SRVAddressProvider{Lb: c, Address: "foo.service.fliglio.com"}
+
+	// when
+	add, err := ap.GetAddress()
+
+	// then
+	if err != nil {
+		t.Error(err)
+	}
+
+	if add.Port == 8001 && add.Address == "0.1.2.3" {
+		return
+	} else if add.Port == 8002 && add.Address == "4.5.6.7" {
+		return
+	} else {
+		t.Errorf("address looks wrong: %+v", add)
+	}
+
 }
 
 func TestRoundRobinFacade(t *testing.T) {
