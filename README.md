@@ -36,6 +36,18 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 	fmt.Printf("%s", address.String())
 	// Output: 0.1.2.3:8001
 
+### or use an `AddressProvider`
+
+	ap := NewAddressProvider("my-svc.service.consul")
+	address, err := ap.GetAddress()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s", address.String())
+	// Output: 0.1.2.3:8001
+
+
 ## Development
 tests are run against some fixture dns entries I set up on fliglio.com (`dig foo.service.fliglio.com SRV`).
 
