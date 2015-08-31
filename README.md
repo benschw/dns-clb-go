@@ -13,7 +13,7 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 
 ## Example:
 	
-	// uses localhost:53 for dns server
+	// uses dns server configured in /etc/resolv.conf
 	srvName := "my-svc.service.consul"
 	c := clb.New() 
 	address, err := c.GetAddress(srvName)
@@ -38,7 +38,7 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 
 ### or use an `AddressProvider`
 	
-	// uses localhost:53 for dns server
+	// uses dns server configured in /etc/resolv.conf
 	ap := NewAddressProvider("my-svc.service.consul")
 	address, err := ap.GetAddress()
 	if err != nil {
