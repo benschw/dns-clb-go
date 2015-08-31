@@ -13,9 +13,9 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 
 ## Example:
 	
-
+	// uses localhost:53 for dns server
 	srvName := "my-svc.service.consul"
-	c := clb.New()
+	c := clb.New() 
 	address, err := c.GetAddress(srvName)
 	if err != nil {
 		panic(err)
@@ -37,7 +37,8 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 	// Output: 0.1.2.3:8001
 
 ### or use an `AddressProvider`
-
+	
+	// uses localhost:53 for dns server
 	ap := NewAddressProvider("my-svc.service.consul")
 	address, err := ap.GetAddress()
 	if err != nil {
