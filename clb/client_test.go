@@ -33,6 +33,31 @@ func ExampleNewRoundRobinClb() {
 	// Output: 0.1.2.3:8001
 }
 
+// Example load balancer with default dns server
+func ExampleWithResolv() {
+	srvName := "foo.service.fliglio.com"
+	c := New()
+	address, err := c.GetAddress(srvName)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s", address.String())
+	// Output: 0.1.2.3:8001
+}
+
+// Example address provider using defaults
+func ExampleAddressProvider() {
+	ap := NewAddressProvider("foo.service.fliglio.com")
+	address, err := ap.GetAddress()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s", address.String())
+	// Output: 0.1.2.3:8001
+}
+
 // Example with factory
 func ExampleNewClb() {
 	srvName := "foo.service.fliglio.com"
