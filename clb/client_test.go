@@ -34,7 +34,7 @@ func ExampleNewRoundRobinClb() {
 }
 
 // Example load balancer with default dns server
-func ExampleWithResolv() {
+func ExampleNew() {
 	srvName := "foo.service.fliglio.com"
 	c := New()
 	address, err := c.GetAddress(srvName)
