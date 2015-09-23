@@ -13,7 +13,7 @@ var _ = log.Print // For debugging; delete when done.
 
 // Example with direct usage
 func ExampleNewRoundRobinClb() {
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	lib := dns.NewLookupLib("8.8.8.8:53")
 	c := NewRoundRobinClb(lib)
 	address, err := c.GetAddress(srvName)
@@ -36,7 +36,7 @@ func ExampleNewRoundRobinClb() {
 // Example load balancer with default dns server
 func ExampleNew() {
 	c := New()
-	address, err := c.GetAddress("foo.service.fliglio.com")
+	address, err := c.GetAddress("foo.service.fligl.io")
 	if err != nil {
 		panic(err)
 	}
@@ -47,7 +47,7 @@ func ExampleNew() {
 
 // Example address provider using defaults
 func ExampleAddressProvider() {
-	ap := NewAddressProvider("foo.service.fliglio.com")
+	ap := NewAddressProvider("foo.service.fligl.io")
 	address, err := ap.GetAddress()
 	if err != nil {
 		panic(err)
@@ -59,7 +59,7 @@ func ExampleAddressProvider() {
 
 // Example with factory
 func ExampleNewClb() {
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 	address, err := c.GetAddress(srvName)
 	if err != nil {
@@ -81,7 +81,7 @@ func ExampleNewClb() {
 func TestAddressProvider(t *testing.T) {
 	// given
 	c := NewClb("8.8.8.8", "53", RoundRobin)
-	ap := &SRVAddressProvider{Lb: c, Address: "foo.service.fliglio.com"}
+	ap := &SRVAddressProvider{Lb: c, Address: "foo.service.fligl.io"}
 
 	// when
 	add, err := ap.GetAddress()
@@ -106,7 +106,7 @@ func TestRoundRobinFacade(t *testing.T) {
 	c := NewClb("8.8.8.8", "53", RoundRobin)
 
 	// when
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	_, err := c.GetAddress(srvName)
 
 	// then
@@ -120,7 +120,7 @@ func TestRandomFacade(t *testing.T) {
 	c := NewClb("8.8.8.8", "53", Random)
 
 	// when
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	_, err := c.GetAddress(srvName)
 
 	// then
@@ -134,7 +134,7 @@ func TestTtlCacheFacade(t *testing.T) {
 	c := NewTtlCacheClb("8.8.8.8", "53", Random, 5)
 
 	// when
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	_, err := c.GetAddress(srvName)
 
 	// then

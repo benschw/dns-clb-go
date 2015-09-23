@@ -2,7 +2,7 @@
 all: build
 
 deps:
-	go get github.com/miekg/dns
+	go get
 
 build:
 	go build -o demo

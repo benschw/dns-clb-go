@@ -2,10 +2,11 @@ package ttlcache
 
 import (
 	"fmt"
-	"github.com/benschw/dns-clb-go/dns"
-	"github.com/benschw/dns-clb-go/randomclb"
 	"log"
 	"testing"
+
+	"github.com/benschw/dns-clb-go/dns"
+	"github.com/benschw/dns-clb-go/randomclb"
 )
 
 var _ = fmt.Print // For debugging; delete when done.
@@ -14,7 +15,7 @@ var _ = log.Print // For debugging; delete when done.
 //strconv.FormatInt(int64(srv.Port), 10)
 func TestLookup(t *testing.T) {
 	// given
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	lib := dns.NewLookupLib("8.8.8.8:53")
 	cache := NewTtlCache(lib, 5)
 	c := randomclb.NewRandomClb(cache)

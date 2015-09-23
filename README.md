@@ -50,7 +50,7 @@ Selects a `SRV` record answer according to specified load balancer algorithm, th
 
 
 ## Development
-tests are run against some fixture dns entries I set up on fliglio.com (`dig foo.service.fliglio.com SRV`).
+tests are run against some fixture dns entries I set up on fligl.io (`dig foo.service.fligl.io SRV`).
 
 
 - `make deps` install deps

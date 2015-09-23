@@ -2,9 +2,10 @@ package randomclb
 
 import (
 	"fmt"
-	"github.com/benschw/dns-clb-go/dns"
 	"log"
 	"testing"
+
+	"github.com/benschw/dns-clb-go/dns"
 )
 
 var _ = fmt.Print // For debugging; delete when done.
@@ -13,7 +14,7 @@ var _ = log.Print // For debugging; delete when done.
 //strconv.FormatInt(int64(srv.Port), 10)
 func TestRandomLookup(t *testing.T) {
 	// given
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	lib := dns.NewLookupLib("8.8.8.8:53")
 	c := NewRandomClb(lib)
 

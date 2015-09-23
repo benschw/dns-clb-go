@@ -13,7 +13,7 @@ var _ = log.Print // For debugging; delete when done.
 
 func TestRoundRobinLookup(t *testing.T) {
 	// given
-	srvName := "foo.service.fliglio.com"
+	srvName := "foo.service.fligl.io"
 	lib := dns.NewLookupLib("8.8.8.8:53")
 	c := NewRoundRobinClb(lib)
 
@@ -35,4 +35,3 @@ func TestRoundRobinLookup(t *testing.T) {
 	}
 
 }
-
