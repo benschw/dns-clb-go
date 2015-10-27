@@ -1,6 +1,10 @@
 [![Build Status](https://drone.io/github.com/benschw/dns-clb-go/status.png)](https://drone.io/github.com/benschw/dns-clb-go/latest)
 [![GoDoc](http://godoc.org/github.com/benschw/dns-clb-go?status.png)](http://godoc.org/github.com/benschw/dns-clb-go)
 
+
+_Deprecated in favor of [srv-lb](https://github.com/benschw/srv-lb), a rewrite with a cleaner interface._
+
+
 # DNS Client Load Balancer for Go
 
 Selects a `SRV` record answer according to specified load balancer algorithm, then resolves its `A` record to an ip, and returns an `Address` structure:
